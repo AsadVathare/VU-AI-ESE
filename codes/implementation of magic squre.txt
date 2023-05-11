@@ -1,0 +1,27 @@
+def generate_magic_square(n):
+    # initialize an n x n matrix with zeros
+    magic_square = [[0 for x in range(n)] for y in range(n)]
+
+    # set the starting position for the first number (1)
+    row = 0
+    col = n // 2
+
+    # fill in the magic square with numbers from 1 to n*n
+    for i in range(1, n * n + 1):
+        magic_square[row][col] = i
+
+        # calculate the next row and column for the next number
+        next_row = (row - 1) % n
+        next_col = (col + 1) % n
+
+        # if the next cell is already filled, move down one row instead
+        if magic_square[next_row][next_col]:
+            row = (row + 1) % n
+        else:
+            row, col = next_row, next_col
+
+    # return the completed magic square
+    return magic_square
+
+magic_square = generate_magic_square(3)
+print(magic_square)

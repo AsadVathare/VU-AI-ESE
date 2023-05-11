@@ -1,0 +1,97 @@
+20 Family Relationships Using Indian Terminology
+Code:
+% Defining the male members of the family
+male(john).
+male(jack).
+male(jim).
+male(joseph).
+male(mahesh).
+male(naveen).
+male(raju).
+male(suresh).
+male(vikram).
+male(yogesh).
+% Defining the female members of the family
+female(jane).
+female(jenny).
+female(julie).
+female(kavita).
+female(latha).
+female(meera).
+female(neha).
+female(rani).
+female(sita).
+female(tina).
+% Defining the relationships between family members
+% Father and child
+father(john, jack).
+father(john, jane).
+father(jim, joseph).
+father(mahesh, rani).
+father(mahesh, naveen).
+father(raju, sita).
+father(raju, vikram).
+father(suresh, neha).
+father(yogesh, tina).
+% Mother and child
+mother(jane, jim).
+mother(jane, joseph).
+mother(jenny, jack).
+mother(jenny, jane).
+mother(julie, rani).
+mother(julie, naveen).
+mother(kavita, sita).
+mother(kavita, vikram).
+mother(latha, neha).
+mother(meera, tina).
+% Spouse
+spouse(john, jane).
+spouse(jim, jenny).
+spouse(mahesh, latha).
+spouse(raju, kavita).
+spouse(suresh, meera).
+spouse(yogesh, julie).
+% Sibling
+sibling(jack, jane).
+sibling(jane, jack).
+sibling(jim, jane).
+sibling(jane, jim).
+sibling(joseph, jack).
+sibling(jack, joseph).
+sibling(naveen, rani).
+sibling(rani, naveen).
+sibling(sita, vikram).
+sibling(vikram, sita).
+sibling(neha, tina).
+sibling(tina, neha).
+% Uncle and niece/nephew
+uncle(jim, rani).
+uncle(jim, naveen).
+uncle(mahesh, sita).
+uncle(mahesh, vikram).
+uncle(raju, neha).
+uncle(yogesh, tina).
+% Aunt and niece/nephew
+aunt(jane, rani).
+aunt(jane, naveen).
+aunt(jenny, sita).
+aunt(jenny, vikram).
+aunt(kavita, neha).
+aunt(latha, tina).
+% Grandparent and grandchild
+grandparent(john, joseph).
+grandparent(john, rani).
+grandparent(jack, joseph).
+grandparent(jack, rani).
+grandparent(jane, joseph).
+grandparent(jane, rani).
+grandparent(jim, rani).
+grandparent(jim, joseph).
+grandparent(mahesh, sita).
+grandparent(mahesh, vikram).
+grandparent(julie, sita).
+grandparent(julie, vikram).
+grandparent(raju, neha).
+grandparent(raju, tina).
+grandparent(suresh, neha).
+grandparent(suresh, tina).

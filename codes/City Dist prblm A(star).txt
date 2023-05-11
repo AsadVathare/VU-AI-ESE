@@ -1,0 +1,73 @@
+from queue import PriorityQueue
+
+# Define a function to compute the heuristic distance between two cities
+def heuristic(city1, city2, city_locations):
+    x1, y1 = city_locations[city1]
+    x2, y2 = city_locations[city2]
+    return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+
+# Define the A* search function
+def astar(start_city, goal_city, city_graph, city_locations):
+    # Initialize the priority queue with the start city
+    frontier = PriorityQueue()
+    frontier.put((0, start_city))
+
+    # Initialize the dictionaries to keep track of the path and the cost so far
+    path = {}
+    path[start_city] = None
+    cost_so_far = {}
+    cost_so_far[start_city] = 0
+
+    # Run the A* search loop
+    while not frontier.empty():
+        # Get the next city to explore from the priority queue
+        current_cost, current_city = frontier.get()
+
+        # Check if we have reached the goal city
+        if current_city == goal_city:
+            break
+
+        # Iterate over the neighbors of the current city
+        for neighbor, distance in city_graph[current_city].items():
+            # Compute the total cost to reach the neighbor through the current city
+            new_cost = cost_so_far[current_city] + distance
+
+            # Check if we have already visited this neighbor or if the new cost is lower than the previous cost
+            if neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]:
+                # Update the cost and the path to the neighbor
+                cost_so_far[neighbor] = new_cost
+                priority = new_cost + heuristic(neighbor, goal_city, city_locations)
+                frontier.put((priority, neighbor))
+                path[neighbor] = current_city
+
+    # Reconstruct the path from the start city to the goal city
+    current_city = goal_city
+    path_list = [current_city]
+    while current_city != start_city:
+        current_city = path[current_city]
+        path_list.append(current_city)
+    path_list.reverse()
+
+    # Return the path and the total cost
+    return path_list, cost_so_far[goal_city]
+city_graph = {
+    'A': {'B': 5, 'C': 3},
+    'B': {'A': 5, 'D': 4},
+    'C': {'A': 3, 'D': 2},
+    'D': {'B': 4, 'C': 2, 'E': 3},
+    'E': {'D': 3}
+}
+
+city_locations = {
+    'A': (0, 0),
+    'B': (1, 0),
+    'C': (0, 1),
+    'D': (1, 1),
+    'E': (2, 1)
+}
+
+start_city = 'A'
+goal_city = 'E'
+
+path, cost = astar(start_city, goal_city, city_graph, city_locations)
+print(f'The shortest path from {start_city} to {goal_city} is {path} with a total cost of {cost}.')

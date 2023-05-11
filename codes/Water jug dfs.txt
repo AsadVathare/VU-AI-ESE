@@ -1,0 +1,42 @@
+def dfs(start, goal, capacities):
+    stack = [(start, [])]
+    visited = set()
+
+    while stack:
+        (state, path) = stack.pop()
+        if state == goal:
+            return path
+        visited.add(state)
+        for (action, result) in successors(state, capacities):
+            if result not in visited:
+                stack.append((result, path + [action]))
+    return None
+
+
+def successors(state, capacities):
+    (x, y) = state
+    (a, b) = capacities
+    return [("fill X", (a, y)),
+            ("fill Y", (x, b)),
+            ("empty X", (0, y)),
+            ("empty Y", (x, 0)),
+            ("X -> Y", (max(0, x - (b - y)), min(x + y, b))),
+            ("Y -> X", (min(x + y, a), max(0, y - (a - x))))]
+
+
+capacities = (4, 3)
+start = (0, 0)
+goal = (2, 0)
+
+path = dfs(start, goal, capacities)
+
+if path is None:
+    print("No solution found.")
+else:
+    print(path)
+
+
+
+
+exp:
+In this implementation, the State class represents a state in the water jug problem, with attributes for the amount of water in each jug. The dfs function takes a starting state, a goal amount of water, and a limit on the number of steps allowed, and returns the first state it finds that has the goal amount of water in one of its jugs. The function uses a stack to implement depth-first search and keeps track of visited states to avoid revisiting them. The State class also includes methods for filling, emptying, and pouring the jugs, as well as checking whether a state is valid

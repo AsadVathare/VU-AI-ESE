@@ -1,0 +1,61 @@
+from heapq import heappush, heappop  # for priority queue
+from math import sqrt
+
+# Define the heuristic function (distance between two points)
+def heuristic(a, b):
+    return sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)
+
+# Define the A* search function
+def astar(start, goal, obstacles):
+    # Create the frontier (priority queue of nodes to be expanded)
+    frontier = [(0, start)]
+    # Create the came_from dictionary (to keep track of the path)
+    came_from = {}
+    # Create the cost_so_far dictionary (to keep track of the cost to reach each node)
+    cost_so_far = {start: 0}
+
+    while frontier:
+        # Pop the node with the lowest cost from the frontier
+        current_cost, current_node = heappop(frontier)
+
+        # If we have reached the goal, return the path
+        if current_node == goal:
+            path = [current_node]
+            while current_node in came_from:
+                current_node = came_from[current_node]
+                path.append(current_node)
+            path.reverse()
+            return path
+
+        # Explore the neighbors of the current node
+        for neighbor in neighbors(current_node, obstacles):
+            # Calculate the cost to reach the neighbor
+            new_cost = cost_so_far[current_node] + heuristic(current_node, neighbor)
+
+            # If the neighbor has not been visited or the new cost is lower than the old cost, update the cost and add it to the frontier
+            if neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]:
+                cost_so_far[neighbor] = new_cost
+                priority = new_cost + heuristic(neighbor, goal)
+                heappush(frontier, (priority, neighbor))
+                came_from[neighbor] = current_node
+
+    # If we have not found a path, return None
+    return None
+
+# Define the function to get the neighbors of a node
+def neighbors(node, obstacles):
+    # Define the possible movements (up, down, left, right, diagonals)
+    possible_movements = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
+    neighbors = []
+    for movement in possible_movements:
+        neighbor = (node[0] + movement[0], node[1] + movement[1])
+        if neighbor not in obstacles:
+            neighbors.append(neighbor)
+    return neighbors
+
+# Test the algorithm
+start = (0, 0)
+goal = (5, 5)
+obstacles = [(1, 1), (1, 2), (2, 2), (3, 3), (4, 4)]
+path = astar(start, goal, obstacles)
+print(path)

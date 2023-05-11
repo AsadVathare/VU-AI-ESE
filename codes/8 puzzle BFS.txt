@@ -1,0 +1,91 @@
+from queue import Queue
+
+
+class PuzzleState:
+    def __init__(self, board, moves=0):
+        self.board = board
+        self.moves = moves
+
+    def __eq__(self, other):
+        return self.board == other.board
+
+    def __hash__(self):
+        return hash(str(self.board))
+
+    def __str__(self):
+        return "\n".join([" ".join([str(cell) for cell in row]) for row in self.board])
+
+    def find_blank(self):
+        for i, row in enumerate(self.board):
+            for j, cell in enumerate(row):
+                if cell == 0:
+                    return (i, j)
+
+    def move(self, direction):
+        i, j = self.find_blank()
+        if direction == "up" and i > 0:
+            new_board = [row[:] for row in self.board]
+            new_board[i][j], new_board[i - 1][j] = new_board[i - 1][j], new_board[i][j]
+            return PuzzleState(new_board, self.moves + 1)
+        elif direction == "down" and i < 2:
+            new_board = [row[:] for row in self.board]
+            new_board[i][j], new_board[i + 1][j] = new_board[i + 1][j], new_board[i][j]
+            return PuzzleState(new_board, self.moves + 1)
+        elif direction == "left" and j > 0:
+            new_board = [row[:] for row in self.board]
+            new_board[i][j], new_board[i][j - 1] = new_board[i][j - 1], new_board[i][j]
+            return PuzzleState(new_board, self.moves + 1)
+        elif direction == "right" and j < 2:
+            new_board = [row[:] for row in self.board]
+            new_board[i][j], new_board[i][j + 1] = new_board[i][j + 1], new_board[i][j]
+            return PuzzleState(new_board, self.moves + 1)
+        else:
+            return None
+
+    def get_children(self):
+        children = []
+        for direction in ["up", "down", "left", "right"]:
+            child = self.move(direction)
+            if child:
+                children.append(child)
+        return children
+
+
+def bfs(start_state, goal_state):
+    frontier = Queue()
+    frontier.put(start_state)
+    visited = set()
+    visited.add(start_state)
+
+    while not frontier.empty():
+        current_state = frontier.get()
+        if current_state == goal_state:
+            return current_state
+        for child in current_state.get_children():
+            if child not in visited:
+                frontier.put(child)
+                visited.add(child)
+
+    return None
+
+
+# example usage
+start_board = [
+    [1, 2, 3],
+    [4, 0, 6],
+    [7, 5, 8]
+]
+start_state = PuzzleState(start_board)
+
+goal_board = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 0]
+]
+goal_state = PuzzleState(goal_board)
+
+solution_state = bfs(start_state, goal_state)
+if solution_state:
+    print("Solution found in {} moves:\n{}".format(solution_state.moves, solution_state))
+else:
+    print("No solution found.")

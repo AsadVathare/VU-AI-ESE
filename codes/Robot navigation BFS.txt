@@ -1,0 +1,53 @@
+from collections import deque
+
+# Define the grid with obstacles marked as 'X' and open spaces as '.'
+grid = [
+    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
+    ['.', '.', 'X', '.', '.', '.', '.', '.', '.', '.'],
+    ['.', 'X', '.', '.', '.', '.', '.', '.', '.', '.'],
+    ['.', '.', '.', 'X', '.', '.', '.', '.', '.', '.'],
+    ['.', '.', '.', '.', 'X', '.', '.', '.', '.', '.'],
+    ['.', '.', '.', '.', '.', 'X', '.', '.', '.', '.'],
+    ['.', '.', '.', '.', '.', '.', 'X', '.', '.', '.'],
+    ['.', '.', '.', '.', '.', '.', '.', 'X', '.', '.'],
+    ['.', '.', '.', '.', '.', '.', '.', '.', 'X', '.'],
+    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
+]
+
+# Define the starting and ending positions
+start = (0, 0)
+end = (9, 9)
+
+# Define the directions to move in
+directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+# Define a function to check if a position is valid (i.e. not out of bounds or an obstacle)
+def is_valid_pos(pos):
+    x, y = pos
+    if x < 0 or x >= len(grid) or y < 0 or y >= len(grid[0]):
+        return False
+    if grid[x][y] == 'X':
+        return False
+    return True
+
+# Define the BFS algorithm
+def bfs(start, end):
+    queue = deque()
+    visited = set()
+    queue.append((start, []))
+    while queue:
+        curr_pos, path = queue.popleft()
+        if curr_pos == end:
+            return path + [curr_pos]
+        if curr_pos in visited:
+            continue
+        visited.add(curr_pos)
+        for direction in directions:
+            new_pos = (curr_pos[0] + direction[0], curr_pos[1] + direction[1])
+            if is_valid_pos(new_pos):
+                queue.append((new_pos, path + [curr_pos]))
+    return None
+
+# Call the BFS algorithm and print the path
+path = bfs(start, end)
+print(path)

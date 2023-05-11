@@ -1,0 +1,79 @@
+import numpy as np
+
+# Create a 3x3 board with zeros representing empty cells
+board = np.zeros((3, 3), dtype=int)
+
+# Define the magic square
+magic_square = np.array([[8, 1, 6], [3, 5, 7], [4, 9, 2]])
+
+# Define a function to check if a player has won
+def check_win(player):
+    # Check rows
+    for i in range(3):
+        if np.array_equal(board[i], [player]*3):
+            return True
+    # Check columns
+    for i in range(3):
+        if np.array_equal(board[:, i], [player]*3):
+            return True
+    # Check diagonals
+    if np.array_equal(np.diagonal(board), [player]*3):
+        return True
+    if np.array_equal(np.fliplr(board).diagonal(), [player]*3):
+        return True
+    return False
+
+# Define a function to get the computer's move
+def get_computer_move():
+    # Find all the empty cells
+    empty_cells = np.argwhere(board == 0)
+    # Initialize the best move to None
+    best_move = None
+    # Initialize the best score to the lowest possible value
+    best_score = -np.inf
+    # Iterate over all the empty cells
+    for cell in empty_cells:
+        # Set the cell to the computer's player number (2)
+        board[cell[0], cell[1]] = 2
+        # Calculate the score for this move
+        score = np.sum(magic_square * board)
+        # If this score is better than the current best score, update the best move and best score
+        if score > best_score:
+            best_move = cell
+            best_score = score
+        # Reset the cell to empty
+        board[cell[0], cell[1]] = 0
+    # Return the best move
+    return best_move
+
+# Define the main game loop
+def play_game():
+    # Define the players
+    player = 1
+    computer = 2
+    # Loop until the game is over
+    while True:
+        # Print the board
+        print(board)
+        # Get the player's move
+        row = int(input("Enter row: "))
+        col = int(input("Enter col: "))
+        board[row, col] = player
+        # Check if the player has won
+        if check_win(player):
+            print("Player {} wins!".format(player))
+            break
+        # Get the computer's move
+        computer_move = get_computer_move()
+        board[computer_move[0], computer_move[1]] = computer
+        # Check if the computer has won
+        if check_win(computer):
+            print("Computer wins!")
+            break
+        # Check if the board is full (tie game)
+        if np.count_nonzero(board) == 9:
+            print("Tie game!")
+            break
+
+# Play the game
+play_game()

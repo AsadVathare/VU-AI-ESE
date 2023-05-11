@@ -1,0 +1,55 @@
+Implement PROLOG programming for 10 Family Relationships Using Western Terminology
+
+Code:
+
+% Define male family members
+male(john).
+male(tom).
+male(bob).
+male(mike).
+male(alex).
+% Define female family members
+female(susan).
+female(kate).
+female(jane).
+female(lisa).
+female(laura).
+% Define parent-child relationships
+parent(john, tom).
+parent(john, bob).
+parent(susan, tom).
+parent(susan, bob).
+parent(tom, mike).
+parent(tom, jane).
+parent(kate, mike).
+parent(kate, jane).
+parent(bob, alex).
+parent(lisa, alex).
+parent(laura, lisa).
+% Define married couples
+married(john, susan).
+married(tom, kate).
+married(bob, lisa).
+% Define sibling relationships
+sibling(tom, bob).
+sibling(mike, jane).
+sibling(lisa, laura).
+% Define grandparent-grandchild relationships
+grandparent(john, mike).
+grandparent(john, jane).
+grandparent(susan, mike).
+grandparent(susan, jane).
+grandparent(tom, alex).
+grandparent(lisa, alex).
+% Define aunt/uncle-nephew/niece relationships
+aunt_or_uncle(X, Y) :-
+ parent(Z, Y),
+ sibling(X, Z).
+nephew_or_niece(X, Y) :-
+ parent(Z, X),
+ sibling(Z, Y).
+% Define cousin relationships
+cousin(X, Y) :-
+ parent(A, X),
+ parent(B, Y),
+ sibling(A, B).

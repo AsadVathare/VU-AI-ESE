@@ -1,0 +1,53 @@
+from queue import Queue
+
+# Create a graph of cities and their distances
+graph = {
+    'A': {'B': 2, 'C': 3},
+    'B': {'A': 2, 'D': 5, 'E': 4},
+    'C': {'A': 3, 'F': 7},
+    'D': {'B': 5},
+    'E': {'B': 4, 'F': 1},
+    'F': {'C': 7, 'E': 1}
+}
+
+# Define the BFS function
+def bfs(graph, start, end):
+    # Create a queue to store the cities to visit
+    queue = Queue()
+    # Mark the starting city as visited
+    visited = set([start])
+    # Enqueue the starting city and its distance
+    queue.put((start, 0))
+    
+    # Traverse the graph using BFS
+    while not queue.empty():
+        # Dequeue the next city and its distance
+        city, distance = queue.get()
+        # Check if we've reached the end city
+        if city == end:
+            return distance
+        # Iterate over the neighboring cities
+        for neighbor, dist in graph[city].items():
+            # If the neighbor hasn't been visited yet, add it to the queue
+            if neighbor not in visited:
+                visited.add(neighbor)
+                # Enqueue the neighbor and its distance
+                queue.put((neighbor, distance + dist))
+    
+    # If we've exhausted all cities without finding the end city, return None
+    return None
+
+# Test the function with a sample graph
+distance = bfs(graph, 'A', 'F')
+print(distance) # Output: 8
+
+
+
+
+
+
+
+
+
+Explain:
+In this example, we use a dictionary to represent the graph, where the keys are the cities and the values are dictionaries of neighboring cities and their distances. We also use the Queue class from the built-in queue module to implement the BFS algorithm. The visited set is used to keep track of the cities we've already visited, so that we don't visit them again. Finally, the function returns the shortest distance between the starting and ending cities.

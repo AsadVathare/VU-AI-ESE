@@ -1,0 +1,45 @@
+class NQueens:
+    def __init__(self, n):
+        self.n = n
+        self.board = [[0 for x in range(n)] for y in range(n)]
+
+    def is_valid(self, row, col):
+        for i in range(col):
+            if self.board[row][i] == 1:
+                return False
+        for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+            if self.board[i][j] == 1:
+                return False
+        for i, j in zip(range(row, self.n, 1), range(col, -1, -1)):
+            if self.board[i][j] == 1:
+                return False
+        return True
+
+    def solve(self, col=0):
+        if col == self.n:
+            return True
+        for i in range(self.n):
+            if self.is_valid(i, col):
+                self.board[i][col] = 1
+                if self.solve(col + 1):
+                    return True
+                self.board[i][col] = 0
+        return False
+
+    def display(self):
+        for row in self.board:
+            print(row)
+
+n = int(input("Enter the number of queens: "))
+q = NQueens(n)
+if q.solve():
+    print("Solution found!")
+    q.display()
+else:
+    print("Solution not found.")
+
+
+
+
+Ex:
+In this code, we first define a class NQueens that contains a method is_valid to check if it's valid to place a queen at a particular position, a method solve to solve the n queens problem using backtracking, and a method display to display the final solution. In the solve method, we iterate over each column of the board and for each column, we try to place a queen in each row until we find a valid position. If we can place a queen in all the columns, then we have found a solution. Otherwise, we backtrack and try to find a new solution. Finally, we create an instance of the NQueens class and call the solve and display methods to find and display the solution.

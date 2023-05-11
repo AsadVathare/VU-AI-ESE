@@ -1,0 +1,86 @@
+import heapq
+
+
+class Node:
+    def __init__(self, state, parent=None, g=0, h=0):
+        self.state = state
+        self.parent = parent
+        self.g = g
+        self.h = h
+
+    def f(self):
+        return self.g + self.h
+
+    def __lt__(self, other):
+        return self.f() < other.f()
+
+
+def astar_search(initial_state, goal_state, h_fn, actions_fn):
+    start_node = Node(state=initial_state)
+    frontier = [start_node]
+    explored = set()
+
+    while frontier:
+        curr_node = heapq.heappop(frontier)
+
+        if curr_node.state == goal_state:
+            return path(curr_node)
+
+        explored.add(curr_node.state)
+
+        for action in actions_fn(curr_node.state):
+            child_state = action[1]
+            if child_state not in explored:
+                child_g = curr_node.g + action[0]
+                child_h = h_fn(child_state, goal_state)
+                child_node = Node(state=child_state, parent=curr_node, g=child_g, h=child_h)
+                heapq.heappush(frontier, child_node)
+
+    return None
+
+
+def path(node):
+    p = []
+    while node:
+        p.append(node.state)
+        node = node.parent
+    return list(reversed(p))
+
+
+# Example usage:
+initial_state = (0, 0)
+goal_state = (3, 3)
+
+
+def actions(state):
+    actions = []
+    x, y = state
+    if x < 3:
+        actions.append((1, (x + 1, y)))
+    if y < 3:
+        actions.append((1, (x, y + 1)))
+    if x > 0:
+        actions.append((1, (x - 1, y)))
+    if y > 0:
+        actions.append((1, (x, y - 1)))
+    return actions
+
+
+def manhattan_distance(state, goal):
+    x1, y1 = state
+    x2, y2 = goal
+    return abs(x1 - x2) + abs(y1 - y2)
+
+
+path = astar_search(initial_state, goal_state, manhattan_distance, actions)
+print(path)
+
+
+
+
+ex:
+Here, Node represents a state in the search tree, with state being the actual state of the problem, parent being the parent node in the search tree, g being the cost of the path from the initial state to the current state, and h being the heuristic cost of the path from the current state to the goal state.
+
+astar_search is the main function that performs the A* search algorithm, taking in the initial state, goal state, a heuristic function h_fn, and an actions function actions_fn that returns a list of possible actions from a given state. It returns the path from the initial state to the goal state as a list of states.
+
+In this example, we use the Manhattan distance heuristic function to estimate the cost of the path from the current state to the goal state. path is the output of astar_search, which is the path from (0, 0) to (3, 3) in a 4x4 grid, with each step having a cost of 1.

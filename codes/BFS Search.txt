@@ -1,0 +1,74 @@
+from queue import Queue
+
+def bfs_search(initial_state, goal_test, successors):
+    """Performs a BFS search from the initial state to the goal state."""
+    # Create a queue and add the initial state to it
+    queue = Queue()
+    queue.put(initial_state)
+
+    # Keep track of visited states to avoid loops
+    visited = set()
+    visited.add(initial_state)
+
+    # Keep track of the parent of each state to reconstruct the path
+    parents = {initial_state: None}
+
+    while not queue.empty():
+        # Get the next state from the queue
+        current_state = queue.get()
+
+        # Check if the goal has been reached
+        if goal_test(current_state):
+            # Reconstruct the path to the goal
+            path = [current_state]
+            parent = parents[current_state]
+            while parent is not None:
+                path.insert(0, parent)
+                parent = parents[parent]
+            return path
+
+        # Generate the successors of the current state and add them to the queue
+        for next_state in successors(current_state):
+            if next_state not in visited:
+                visited.add(next_state)
+                queue.put(next_state)
+                parents[next_state] = current_state
+
+    # If the queue is empty and the goal has not been found, there is no solution
+    return None
+# Define the initial state, goal test function, and successors function
+initial_state = (0, 0)
+goal_state = (2, 0)
+
+def goal_test(state):
+    return state == goal_state
+
+def successors(state):
+    x, y = state
+    return [(x+1, y), (x, y+1), (x-1, y), (x, y-1)]
+
+# Perform a BFS search from the initial state to the goal state
+path = bfs_search(initial_state, goal_test, successors)
+
+# Print the path to the goal state
+if path is not None:
+    print("Path to goal state:", path)
+else:
+    print("No path to goal state found.")
+
+
+
+ex:
+In this code, the bfs_search function takes four arguments:
+
+initial_state: The initial state of the problem.
+goal_state: The goal state of the problem.
+actions: A list of functions that take a state and return a list of possible successor states.
+result: A function that takes two states and returns True if they are equal (i.e. the current state is the goal state).
+The function then creates a queue called frontier, adds the initial state to it, and creates an empty set called explored. It then enters a loop that continues until the frontier queue is empty. In each iteration of the loop, the function removes the next state from the frontier queue and adds it to the explored set.
+
+If the removed state is the goal state, the function returns it. Otherwise, the function generates all possible successor states using the actions list and adds them to the frontier queue if they have not already been explored.
+
+If the goal state is not found, the function returns None.
+
+Note that this implementation assumes that the problem is deterministic and that there are no loops in the state space. If either of these assumptions does not hold, additional code would be needed to handle these cases.

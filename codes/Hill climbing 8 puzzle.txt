@@ -1,0 +1,66 @@
+import random
+
+# Define the goal state
+goal_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+
+# Define the initial state
+initial_state = [1, 2, 3, 4, 5, 0, 7, 8, 6]
+
+
+# Define the heuristic function
+def heuristic(state):
+    # Calculate the number of misplaced tiles
+    misplaced_tiles = sum([1 if state[i] != goal_state[i] else 0 for i in range(9)])
+    return misplaced_tiles
+
+
+# Define the hill climbing algorithm
+def hill_climbing(initial_state, heuristic):
+    # Set the current state to the initial state
+    current_state = initial_state
+
+    while True:
+        # Generate the neighbors of the current state
+        neighbors = []
+        blank_index = current_state.index(0)
+        if blank_index not in [0, 1, 2]:
+            # Move the blank tile up
+            neighbor = current_state[:]
+            neighbor[blank_index], neighbor[blank_index - 3] = neighbor[blank_index - 3], neighbor[blank_index]
+            neighbors.append(neighbor)
+        if blank_index not in [0, 3, 6]:
+            # Move the blank tile left
+            neighbor = current_state[:]
+            neighbor[blank_index], neighbor[blank_index - 1] = neighbor[blank_index - 1], neighbor[blank_index]
+            neighbors.append(neighbor)
+        if blank_index not in [6, 7, 8]:
+            # Move the blank tile down
+            neighbor = current_state[:]
+            neighbor[blank_index], neighbor[blank_index + 3] = neighbor[blank_index + 3], neighbor[blank_index]
+            neighbors.append(neighbor)
+        if blank_index not in [2, 5, 8]:
+            # Move the blank tile right
+            neighbor = current_state[:]
+            neighbor[blank_index], neighbor[blank_index + 1] = neighbor[blank_index + 1], neighbor[blank_index]
+            neighbors.append(neighbor)
+
+        # Evaluate the neighbors using the heuristic function
+        neighbor_scores = [heuristic(neighbor) for neighbor in neighbors]
+
+        # Choose the neighbor with the lowest heuristic score
+        best_neighbor_index = neighbor_scores.index(min(neighbor_scores))
+        best_neighbor = neighbors[best_neighbor_index]
+        best_neighbor_score = neighbor_scores[best_neighbor_index]
+
+        # If the best neighbor is worse than the current state, return the current state
+        if best_neighbor_score >= heuristic(current_state):
+            return current_state
+
+        # Otherwise, set the current state to the best neighbor
+        current_state = best_neighbor
+
+
+# Test the hill climbing algorithm
+print("Initial state:", initial_state)
+final_state = hill_climbing(initial_state, heuristic)
+print("Final state:", final_state)
